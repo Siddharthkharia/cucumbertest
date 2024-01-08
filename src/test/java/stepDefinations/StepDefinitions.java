@@ -1,85 +1,97 @@
 package stepDefinations;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+import pom.AmazonPOM;
+import org.example.BaseTest;
+import driver.ExecutionNode;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.DriverManager;
+import java.util.List;
+
+import static utilities.utils.snapshot;
 
 
-public class StepDefinitions {
+public class StepDefinitions extends BaseTest {
 
-    public WebDriver oDriver;
-    static int ScrShotCtr=0;
-    WebDriverWait owait ;
 
-    public Map<Integer,String> scenarios = new HashMap<Integer, String>();
-
-    @Given("Initialize {string} driver and launch {string}")
-    public void intiBrowser(String browser, String url){
-
-        if(browser.equalsIgnoreCase("chrome")){
-            WebDriverManager.chromedriver().setup();
-            this.oDriver = new ChromeDriver();
-        }else{
-            WebDriverManager.firefoxdriver().setup();
-            this.oDriver = new FirefoxDriver();
-        }
-        owait = new WebDriverWait(oDriver,2000);
-        this.oDriver.get(url);
-
+    @Given("Initialize and launch {string}")
+    public void intiBrowser(String url){
+        ExecutionNode.getDriver().get(url);
     }
 
     @Then("validate status is {}")
     public void validate_status(){
-
     }
 
     @Then("take screenshot of the webpage")
     public void takeScreenshot() {
-        int count = ScrShotCtr;
+        snapshot(ExecutionNode.getDriver());
+    }
 
-        String scenarioName = scenarios.get(Thread.currentThread().hashCode());
-        TakesScreenshot scrShot = ((TakesScreenshot) oDriver);
-        File file = scrShot.getScreenshotAs(OutputType.FILE);
-        try {
-            FileUtils.copyFile(file, new File("./Screenshots/" + scenarioName + "_" + count + ".png"));
-            System.out.println("the Screenshot is taken and saved as " + scenarioName + "_" + count + ".png");
-            ScrShotCtr++;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    @And("search for the {string}")
+    public void search_product(String product) {
+        WebElement searchbar = ExecutionNode.getDriver().findElement(By.xpath("//input[@id='twotabsearchtextbox']"));
+        searchbar.sendKeys(product);
+        snapshot(ExecutionNode.getDriver());
+        WebElement submitSearch = ExecutionNode.getDriver().findElement(By.xpath("//input[@id='nav-search-submit-button']"));
+        submitSearch.submit();
+        snapshot(ExecutionNode.getDriver());
+        List<WebElement> searchList = ExecutionNode.getDriver().findElements(By.xpath("//div[@data-component-type='s-search-result']"));
+        for (WebElement el : searchList) {
+            File file = el.getScreenshotAs(OutputType.FILE);
+            try {
+                snapshot(el);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            String price = el.findElement(By.xpath("//span[@class='a-price']//following::span[@class='a-price-whole']")).getText();
+            System.out.println("price for the element = " + price);
         }
     }
 
-    @Before
-    public void init(Scenario scenario){
-        addScenario(scenario.getName());
+    @And("search for the data of products")
+    public void search_product(DataTable dataTable) {
+        List<String> productList = dataTable.asList(String.class);
+        for (String product :productList){
+            WebElement searchbar = ExecutionNode.getDriver().findElement(By.xpath("//input[@id='twotabsearchtextbox']"));
+            searchbar.clear();
+            searchbar.sendKeys(product);
+            snapshot(ExecutionNode.getDriver());
+            WebElement submitSearch = ExecutionNode.getDriver().findElement(By.xpath("//input[@id='nav-search-submit-button']"));
+            submitSearch.submit();
+            snapshot(ExecutionNode.getDriver());
+            List<WebElement> searchList = ExecutionNode.getDriver().findElements(By.xpath("//div[@data-component-type='s-search-result']"));
+            int counter = 0;
+            for (WebElement el : searchList) {
+                try {
+                    snapshot(el);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                String price = el.findElement(By.xpath("//span[@class='a-price']//following::span[@class='a-price-whole']")).getText();
+                System.out.println("price for the element = " + price);
+            }
+        }
+
     }
 
-    @After
-    public void browserTearDown(){
-        this.oDriver.quit();
+    @Given("Execute the amazon launch and search operation for the {string}")
+    public void amazonSearchTest(String product){
+        try{
+            AmazonPOM.getInstance().searchProduct(product);
+        }catch (Exception e){
+            snapshot(ExecutionNode.getDriver());
+        }
     }
-
-    public void addScenario(String scenario){
-        Thread currentThread = Thread.currentThread();
-        int threadId = currentThread.hashCode();
-        scenarios.put(threadId,scenario);
-    }
-
 
 }
