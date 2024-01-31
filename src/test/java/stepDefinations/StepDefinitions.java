@@ -14,7 +14,9 @@ import org.openqa.selenium.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static utilities.utils.snapshot;
 
@@ -82,16 +84,29 @@ public class StepDefinitions extends BaseTest {
                 System.out.println("price for the element = " + price);
             }
         }
-
     }
 
     @Given("Execute the amazon launch and search operation for the {string}")
     public void amazonSearchTest(String product){
         try{
+            AmazonPOM.getInstance().launchHomepage();
             AmazonPOM.getInstance().searchProduct(product);
         }catch (Exception e){
             snapshot(ExecutionNode.getDriver());
         }
     }
+
+
+    @And("search for the data of products from below map")
+        public void Search_product(DataTable dataTable){
+        List<String> productList = new ArrayList<>();
+            List<Map<String, String>> mapList = dataTable.asMaps(String.class, String.class);
+            for( Map<String, String> column : mapList){
+                productList.add(column.get("productName"));
+            }
+            for( String product : productList){
+                AmazonPOM.getInstance().searchProduct(product);
+            }
+        }
 
 }

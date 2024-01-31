@@ -7,6 +7,7 @@ public class ExecutionNode {
 
     static ThreadLocal<String> scenarioName = new ThreadLocal<String>();
 
+
     public static WebDriver getDriver() {
         return driver.get();
     }

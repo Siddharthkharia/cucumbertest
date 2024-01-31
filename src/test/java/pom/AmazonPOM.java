@@ -20,8 +20,12 @@ public abstract class AmazonPOM extends BaseTest {
         return new Amazon_Web();
     }
 
-    public void searchProduct (String productName){
+    public void launchHomepage(){
         ExecutionNode.getDriver().get("https://www.amazon.in");
+    }
+
+    public void searchProduct (String productName){
+        ExecutionNode.getDriver().findElement(searchbar).clear();
         ExecutionNode.getDriver().findElement(searchbar).sendKeys(productName);
         snapshot(ExecutionNode.getDriver());
         ExecutionNode.getDriver().findElement(submitSearch).submit();

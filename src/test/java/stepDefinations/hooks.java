@@ -17,6 +17,7 @@ public class hooks extends BaseTest {
 
     @After
     public void TearDown(){
+        System.out.println("PersonalLOGGER_Quit Quiting and flushing driver from ExcutionNode");
         ExecutionNode.getDriver().quit();
         ExecutionNode.flushDriver();
     }

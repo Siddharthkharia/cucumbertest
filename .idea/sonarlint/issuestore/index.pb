@@ -1,0 +1,19 @@
+
+R
+"src/test/java/utilities/utils.java,a/9/a95740968bd897937806550d86c18b38e1d2e4e5
+X
+(src/test/java/stepDefinations/hooks.java,9/3/93c76eb635fd71a058aa52e59696826f286491cb
+W
+'src/test/java/org/example/BaseTest.java,a/f/af27796f7c3e78b5511ecb74bfba24156bd625d2
+7
+pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
+^
+.src/test/java/org/example/RunCucumberTest.java,c/b/cb6c10f227a49addd6ffe809d1aaa5ae049cbbfd
+b
+2src/test/java/stepDefinations/StepDefinitions.java,6/b/6bee4ea7aaf7520d09c7b175497f64c4514071df
+P
+ src/test/java/pom/AmazonPOM.java,7/a/7a91757f2f340ec0266600629775216a3ad8b037
+W
+'src/test/java/driver/ExecutionNode.java,c/7/c75381671ac062cb9caf6ce1a7c6bbbf1c24f091
+P
+ src/test/java/driver/driver.java,c/7/c7dbae1269156d1a967f2ab04431f865e344705e
