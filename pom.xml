@@ -10,9 +10,10 @@
     <packaging>jar</packaging>
 
     <properties>
-        <cucumber.version>5.0.0</cucumber.version>
+        <cucumber.version>7.15.0</cucumber.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <defaultSuiteName>testSuites/AmazonSuite.xml</defaultSuiteName>
+        <ExtentreportVersion>3.0.7</ExtentreportVersion>
     </properties>
 
     <dependencies>
@@ -66,9 +67,9 @@
 
         <!-- https://mvnrepository.com/artifact/com.relevantcodes/extentreports -->
         <dependency>
-            <groupId>com.relevantcodes</groupId>
+            <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>2.41.2</version>
+            <version>${ExtentreportVersion}</version>
         </dependency>
         <dependency>
             <groupId>io.github.bonigarcia</groupId>

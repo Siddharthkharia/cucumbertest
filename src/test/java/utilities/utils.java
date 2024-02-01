@@ -11,6 +11,9 @@ import org.w3.x2000.x09.xmldsig.ObjectType;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class utils {
     public static String baseDir = "./Screenshots/";
@@ -46,4 +49,30 @@ public class utils {
             throw e;
         }
     }
+
+    public static String getCurrentDateTime(){
+
+        DateFormat dateFormat = new SimpleDateFormat("MM_dd_yyyy_HH_mm_ss");
+        Date currentDate = new Date();
+        return dateFormat.format(currentDate);
+    }
+
+    public static String snapshot(String scenarioStatus) {
+
+        String scenarioName = ExecutionNode.getScenarioName();
+        String timestamp = getCurrentDateTime();
+        String filename = baseDir +scenarioStatus+"/"+scenarioName+"/WebDriver"+timestamp+".png";
+
+        TakesScreenshot scrShot = ((TakesScreenshot)ExecutionNode.getDriver());
+        File file = scrShot.getScreenshotAs(OutputType.FILE);
+        try {
+            FileUtils.copyFile(file, new File(filename));
+            System.out.println("the Screenshot is taken and saved as = "+filename);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return filename;
+    }
+
 }
